@@ -2,31 +2,38 @@ import './App.css';
 import { useState } from 'react';
 
 function App() {
-  const [list, setList] = useState([{ id: 0, task: 'Wake up at 5 a.m.'}]);
+  const [lists, setList] = useState([{ id: 0, task: 'Wake up at 5 a.m.'}]);
 
-  const addList = (e) => {
+  const addTask = (e) => {
     if (e.key==='Enter') {
       e.preventDefault();
-      setList([...list,{ id: list.length, task: e.target.value }])
+      setList([...lists,{ id: lists.length, task: e.target.value }])
       e.target.value = ''
     }
   }
 
-  const listItems = list.map((x) =>
-    <li key={x.id.toString()}>{x.task}</li>
+  const listItems = lists.map((x) =>
+    <li key={x.id.toString()}>
+      {x.task} <button onClick={() => {
+        let newLists = lists.filter(list => list.id !== x.id);
+        setList(newLists);
+      }}>Done</button>
+    </li>
   )
 
   return (
     <div className="App">
       <header className="App-header">
-        <p>
+        <h2>
           To-do List
-        </p>
-        <ul>
-          {listItems}
-        </ul>
-        <input type="text" placeholder="Insert new task" onKeyPress={addList} />
+        </h2>
       </header>
+      <div className="App-body">
+        <ul>
+          {lists.length > 0 ? listItems : 'Your todo list is empty, add one now'}
+        </ul>
+        <input type="text" placeholder="Insert new task" onKeyPress={addTask} />
+      </div>
     </div>
   );
 }
